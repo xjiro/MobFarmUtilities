@@ -17,9 +17,9 @@ public class ChangeExperienceMessage {
 
     public BlockPos pos;
     public int amount;
-    public boolean level;
+    public int level;
 
-    public ChangeExperienceMessage(BlockPos pos, int amount, boolean level) {
+    public ChangeExperienceMessage(BlockPos pos, int amount, int level) {
         this.pos = pos;
         this.amount = amount;
         this.level = level;
@@ -28,11 +28,11 @@ public class ChangeExperienceMessage {
     public static void encode(ChangeExperienceMessage message, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeBlockPos(message.pos);
         packetBuffer.writeInt(message.amount);
-        packetBuffer.writeUtf(Boolean.toString(message.level));
+        packetBuffer.writeInt(message.level);
     }
 
     public static ChangeExperienceMessage decode(FriendlyByteBuf packetBuffer) {
-        return new ChangeExperienceMessage(packetBuffer.readBlockPos(), packetBuffer.readInt(), Boolean.parseBoolean(packetBuffer.readUtf()));
+        return new ChangeExperienceMessage(packetBuffer.readBlockPos(), packetBuffer.readInt(), packetBuffer.readInt());
     }
 
 
@@ -47,7 +47,7 @@ public class ChangeExperienceMessage {
                     BlockEntity blockEntityO = world.getBlockEntity(message.pos);
                     if (blockEntityO instanceof ExperienceCollectorBlockEntity) {
                         ExperienceCollectorBlockEntity blockEntity = (ExperienceCollectorBlockEntity) blockEntityO;
-                        if (message.level) {
+                        if (message.level != 0) {
                             int neededPoints = Utils.getPointsForNextLevel(playerEntity.experienceLevel);
                             neededPoints = neededPoints - Mth.floor(playerEntity.experienceProgress * (float) playerEntity.getXpNeededForNextLevel());
                             if (blockEntity.getAmount() >= neededPoints) {

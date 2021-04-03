@@ -59,7 +59,7 @@ public class ExperienceCollectorScreen extends BaseScreen<ExperienceCollectorMen
         if (mouseX >= leftPos + 75 && mouseX <= leftPos + 75 + 17 && mouseY >= topPos + 15 && mouseY <= topPos + 15 + 61) {
             BlockEntity tileEntity = menu.getTileEntity();
             if (delta < 0 && tileEntity instanceof ExperienceCollectorBlockEntity)
-                NetworkHandler.INSTANCE.sendToServer(new ChangeExperienceMessage(tileEntity.getBlockPos(), (int) -delta, hasShiftDown()));
+                NetworkHandler.INSTANCE.sendToServer(new ChangeExperienceMessage(tileEntity.getBlockPos(), (int) -delta, hasShiftDown() ? 1 : 0));
             return true;
         }
         return false;
